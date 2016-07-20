@@ -1,9 +1,12 @@
 /*
+ https://github.com/smooty/screeps
+ Summer, 2016
+
  An upgrader should be either:
 
  'blnHarvesting'    -- gathering energy from source (includes traveling to the source)
  'blnTransferring'  -- moving energy from itself to controller (includes traveling to controller)
- */
+*/
 
 module.exports = {
 

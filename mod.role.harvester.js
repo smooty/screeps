@@ -1,9 +1,16 @@
 /*
+ https://github.com/smooty/screeps
+ Summer, 2016
+
  A harvester should be either:
 
  'blnHarvesting'    -- gathering energy from source (includes traveling to the source)
  'blnTransferring'  -- moving energy from itself to spawn (includes traveling to spawn)
- */
+
+ TO FIX:
+
+    Currently I use 'Marysville' below -- need to figure out a way to get the spawn name dynamically
+*/
 
 module.exports = {
 

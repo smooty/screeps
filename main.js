@@ -1,13 +1,20 @@
 /*
-    Jason M. Stoops
+    https://github.com/smooty/screeps
+    Summer, 2016
 */
 
 // global variables
-var roleHarvester = require('role.harvester');
-var roleUpgrader = require('role.upgrader');
+var roleHarvester = require('mod.role.harvester');
+var roleUpgrader = require('mod.role.upgrader');
+var funcSpawn = require('mod.function.spawn');
+var funcManageMemory = require('mod.function.manage_memory');
 
+// main function; loop forever
 module.exports.loop = function ()
 {
+    // spawn new creeps if necessary
+    funcSpawn.run();
+
     // for each of the creeps...
     for (let name in Game.creeps) {
 
@@ -24,4 +31,7 @@ module.exports.loop = function ()
             roleUpgrader.run(creep);
         }
     }
+
+    // clean up memory
+    funcManageMemory.run()
 }
