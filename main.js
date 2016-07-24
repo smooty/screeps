@@ -1,37 +1,68 @@
-/*
+/**
     https://github.com/smooty/screeps
     Summer, 2016
+
+    TO FIX:  Clean up the tower defense code so that I'm not hard coding the room ID
 */
 
-// global variables
-var roleHarvester = require('mod.role.harvester');
-var roleUpgrader = require('mod.role.upgrader');
-var funcSpawn = require('mod.function.spawn');
-var funcManageMemory = require('mod.function.manage_memory');
+"use strict";
 
-// main function; loop forever
+require('mod.screeps-perf')({
+    speedUpArrayFunctions: true,
+    cleanUpCreepMemory: true,
+    optimizePathFinding: false
+});
+
+// global variables
+var objRoles = require('mod.roles');
+var objFunctions = require('mod.functions');
+
+// main function
 module.exports.loop = function ()
 {
     // spawn new creeps if necessary
-    funcSpawn.run();
+    objFunctions.spawn_new_creeps();
 
     // for each of the creeps...
-    for (let name in Game.creeps) {
-
+    for (let name in Game.creeps)
+    {
         var creep = Game.creeps[name]
 
-        // if creep is harvester...
-        if (creep.memory.role == 'harvester')
+        // if creep is builder...
+        if (creep.memory.role == 'builder')
         {
-            roleHarvester.run(creep);
+            objRoles.builder(creep);
+        }
+        // if creep is harvester...
+        else if (creep.memory.role == 'harvester')
+        {
+            objRoles.harvester(creep);
+        }
+        // if creep is mason...
+        else if (creep.memory.role == 'mason')
+        {
+            objRoles.mason(creep);
+        }
+        // if creep is repairer...
+        else if (creep.memory.role == 'repairer')
+        {
+            objRoles.repairer(creep);
+        }
+        // if creep is scout harvester...
+        else if (creep.memory.role == 'scout_harvester')
+        {
+            objRoles.scout_harvester(creep);
         }
         // if creep is upgrader...
         else if (creep.memory.role == 'upgrader')
         {
-            roleUpgrader.run(creep);
+            objRoles.upgrader(creep);
         }
     }
 
-    // clean up memory
-    funcManageMemory.run()
+    // tower defense
+    objFunctions.tower_defense();
+
+    // manage memory
+    objFunctions.manage_memory();
 }
