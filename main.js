@@ -7,12 +7,6 @@
 
 "use strict";
 
-require('mod.screeps-perf')({
-    speedUpArrayFunctions: true,
-    cleanUpCreepMemory: true,
-    optimizePathFinding: false
-});
-
 // global variables
 var objRoles = require('mod.roles');
 var objFunctions = require('mod.functions');
@@ -26,7 +20,7 @@ module.exports.loop = function ()
     // for each of the creeps...
     for (let name in Game.creeps)
     {
-        var creep = Game.creeps[name]
+        var creep = Game.creeps[name];
 
         // if creep is builder...
         if (creep.memory.role == 'builder')
@@ -65,4 +59,4 @@ module.exports.loop = function ()
 
     // manage memory
     objFunctions.manage_memory();
-}
+};
