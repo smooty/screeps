@@ -21,6 +21,7 @@ var blnEnableLogging_harvester = false;
 var blnEnableLogging_builder = false;
 var blnEnableLogging_mason = false;
 var blnEnableLogging_repairer = false;
+var blnEnableLogging_settler = true;
 
 
 function _blnWallsToRepair(creep,intWallHealth)
@@ -385,7 +386,7 @@ function _harvester(creep)
             // not empty; keep transferring (or continue traveling)
             else
             {
-                // fill priority:  tower -> spawns -> containers -> extensions -> controller
+                // fill priority:  tower -> spawns -> extensions -> containers -> controller
 
                 // 1.  Tower
                 var objTower = creep.pos.findClosestByPath(FIND_STRUCTURES, {
@@ -395,13 +396,13 @@ function _harvester(creep)
                 {
                     if (creep.transfer(objTower,RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     {
-                        if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] moving towards " + objTower.id + " at " + objTower.pos + " to transfer my energy");}
+                        if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] moving towards " + STRUCTURE_TOWER + " at " + objTower.pos + " to transfer my energy");}
 
                         creep.moveTo(objTower);
                     }
                     else
                     {
-                        if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] transferring energy to " + objTower.id + " at " + objTower.pos);}
+                        if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] transferring energy to " + STRUCTURE_TOWER + " at " + objTower.pos);}
                     }
                     return; // exit this function; we found the tower we're going to fill up
                 }
@@ -416,42 +417,19 @@ function _harvester(creep)
                     {
                         if (creep.transfer(objSpawn, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                         {
-                            if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] moving towards " + objSpawn.id + " at " + objSpawn.pos + " to transfer my energy");}
+                            if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] moving towards Spawn point at " + objSpawn.pos + " to transfer my energy");}
 
                             creep.moveTo(objSpawn);
                         }
                         else
                         {
-                            if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] transferring energy to " + objSpawn.id + " at " + objSpawn.pos);}
+                            if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] transferring energy to Spawn point at " + objSpawn.pos);}
                         }
                         return; // exit this function; we found the spawn we're going to fill up
                     }
                 }
 
-                // 3.  Containers
-                var objContainer = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: (s) => s.structureType == STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] < s.storeCapacity
-                });
-                if (objContainer != undefined)
-                {
-                    if (creep.transfer(objContainer,RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
-                    {
-                        if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] moving towards " + objContainer.id + " at " + objContainer.pos + " to transfer my energy");}
-
-                        creep.moveTo(objContainer);
-                    }
-                    else
-                    {
-                        if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] transferring energy to " + objContainer.id + " at " + objContainer.pos);}
-                    }
-                    return; // exit this function; we found the containers we're going to fill up
-                }
-                else
-                {
-                    console.log("Can't find any containers");
-                }
-
-                // 4.  Extensions -- check all our extensions; if they need energy, go transfer to them
+                // 3.  Extensions -- check all our extensions; if they need energy, go transfer to them
                 var objStructure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                     filter: (s) => s.structureType == STRUCTURE_EXTENSION && s.energy < s.energyCapacity
                 });
@@ -459,15 +437,42 @@ function _harvester(creep)
                 {
                     if (creep.transfer(objStructure,RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
                     {
-                        if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] moving towards " + objStructure.id + " at " + objStructure.pos + " to transfer my energy");}
+                        if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] moving towards " + STRUCTURE_EXTENSION + " at " + objStructure.pos + " to transfer my energy");}
 
                         creep.moveTo(objStructure);
                     }
                     else
                     {
-                        if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] transferring energy to " + objStructure.id + " at " + objStructure.pos);}
+                        if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] transferring energy to " + STRUCTURE_EXTENSION + " at " + objStructure.pos);}
                     }
                     return; // exit this function; we found the extensions we're going to fill up
+                }
+                else
+                {
+                    if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] can't find any extensions");}
+                }
+
+                // 4.  Containers
+                var objContainer = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                    filter: (s) => s.structureType == STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] < s.storeCapacity
+                });
+                if (objContainer != undefined)
+                {
+                    if (creep.transfer(objContainer,RESOURCE_ENERGY) == ERR_NOT_IN_RANGE)
+                    {
+                        if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] moving towards " + STRUCTURE_CONTAINER + " at " + objContainer.pos + " to transfer my energy");}
+
+                        creep.moveTo(objContainer);
+                    }
+                    else
+                    {
+                        if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] transferring energy to " + STRUCTURE_CONTAINER + " at " + objContainer.pos);}
+                    }
+                    return; // exit this function; we found the containers we're going to fill up
+                }
+                else
+                {
+                    if (blnEnableLogging_harvester) {console.log(creep.name + "[" + creep.memory.role + "] can't find any containers");}
                 }
 
                 // 5.  Controller -- if the spawns and extensions are full, dump energy into the controller
@@ -728,6 +733,65 @@ function _repairer(creep)
     }
 }
 
+function _settler(creep)
+{
+    // the settler is used to move to an adjacent room and claim that room's controller for us, thereby making us the owner of the room
+
+    if (blnEnableLogging_settler) {console.log(creep.name + "[" + creep.memory.role + "] has entered the _settler function");}
+
+    // if creep isn't in adjacent room, move there first
+    if (creep.room.name != strAdjacentRoom)
+    {
+        if (blnEnableLogging_settler) {console.log(creep.name + "[" + creep.memory.role + "] need to move to adjacent room " + strAdjacentRoom);}
+
+        var route = Game.map.findRoute(strHomeRoom,strAdjacentRoom);
+        if (route.length > 0)
+        {
+            var exit = creep.pos.findClosestByRange(route[0].exit);
+            creep.moveTo(exit);
+        }
+        else
+        {
+            if (blnEnableLogging_settler) {console.log(creep.name + "[" + creep.memory.role + "] has no route to " + strAdjacentRoom);}
+        }
+    }
+    else
+    {
+        // try to claim the controller; if my GCL isn't high enough, reserve it instead
+        if (creep.room.controller)
+        {
+            if (creep.claimController(creep.room.controller) == ERR_NOT_IN_RANGE)
+            {
+                if (blnEnableLogging_settler) {console.log(creep.name + "[" + creep.memory.role + "] moving towards controller at " + creep.room.controller.pos);}
+
+                creep.moveTo(creep.room.controller);
+            }
+            else
+            {
+                if (creep.claimController(creep.room.controller) == ERR_GCL_NOT_ENOUGH)
+                {
+                    if (blnEnableLogging_settler) {console.log(creep.name + "[" + creep.memory.role + "] GCL is not high enough to claim controller; reserve it instead");}
+
+                    if (creep.reserveController(creep.room.controller) == ERR_NOT_IN_RANGE)
+                    {
+                        if (blnEnableLogging_settler) {console.log(creep.name + "[" + creep.memory.role + "] moving towards controller at " + creep.room.controller.pos);}
+
+                        creep.moveTo(creep.room.controller);
+                    }
+                    else
+                    {
+                        if (blnEnableLogging_settler) {console.log(creep.name + "[" + creep.memory.role + "] reserving controller at " + creep.room.controller.pos);}
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (blnEnableLogging_settler) {console.log(creep.name + "[" + creep.memory.role + "] there in no controller in room " + strAdjacentRoom);}
+        }
+    }
+}
+
 module.exports = {
 
     builder: function(creep)
@@ -758,5 +822,10 @@ module.exports = {
     upgrader: function(creep)
     {
         _upgrader(creep);
+    },
+
+    settler: function(creep)
+    {
+        _settler(creep);
     }
 };

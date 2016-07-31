@@ -14,6 +14,13 @@ var objFunctions = require('mod.functions');
 // main function
 module.exports.loop = function ()
 {
+    // can i tell if different rooms are being cycled through in this function?
+    for (let i in Game.rooms)
+    {
+        var objRoom = Game.rooms[i];
+        // console.log(objRoom.name);
+    }
+
     // spawn new creeps if necessary
     objFunctions.spawn_new_creeps();
 
@@ -51,6 +58,11 @@ module.exports.loop = function ()
         else if (creep.memory.role == 'upgrader')
         {
             objRoles.upgrader(creep);
+        }
+        // if creep is settler...
+        else if (creep.memory.role == 'settler')
+        {
+            objRoles.settler(creep);
         }
     }
 

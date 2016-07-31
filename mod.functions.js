@@ -34,16 +34,17 @@ module.exports = {
 
     spawn_new_creeps: function()
     {
-        var intMinNumBuilders = 7;
+        var intMinNumBuilders = 1;
         var intMinNumHarvesters = 4;
         var intMinNumMasons = 1;
         var intMinNumRepairers = 1;
-        var intMinNumScoutHarvesters = 8;
+        var intMinNumScoutHarvesters = 4;
         var intMinNumUpgraders = 4;
+        var intMinNumSettlers = 1;
         var intRequiredEnergy = 300;
         var objName;
         var objSpawn;
-        var intMaxCreeps = 25;
+        var intMaxCreeps = 16;
 
         // initialize variables
         var intNumBuilders = _.sum(Game.creeps, (c) => c.memory.role == 'builder');
@@ -52,6 +53,7 @@ module.exports = {
         var intNumRepairers = _.sum(Game.creeps, (c) => c.memory.role == 'repairer');
         var intNumScoutHarvesters = _.sum(Game.creeps, (c) => c.memory.role == 'scout_harvester');
         var intNumUpgraders = _.sum(Game.creeps, (c) => c.memory.role == 'upgrader');
+        var intNumSettlers = _.sum(Game.creeps, (c) => c.memory.role == 'settler');
 
         // check all our spawns; if the spawn has enough energy to create a creep, spawn something (provided we don't already have 'intMaxCreeps'
         if (intCountCreeps() < intMaxCreeps)
@@ -62,6 +64,13 @@ module.exports = {
 
                 if (objSpawn.energy >= intRequiredEnergy)
                 {
+                    console.log("I have (" + intNumHarvesters + ") harvesters and need (" + intMinNumHarvesters + ") of them");
+                    console.log("I have (" + intNumScoutHarvesters + ") scout_harvesters and need (" + intMinNumScoutHarvesters + ") of them");
+                    console.log("I have (" + intNumUpgraders + ") upgraders and need (" + intMinNumUpgraders + ") of them");
+                    console.log("I have (" + intNumBuilders + ") builders and need (" + intMinNumBuilders + ") of them");
+                    console.log("I have (" + intNumRepairers + ") repairers and need (" + intMinNumRepairers + ") of them");
+                    console.log("I have (" + intNumSettlers + ") settlers and need (" + intMinNumSettlers + ") of them");
+
                     // spawn a new harvester if we don't have enough
                     if (intNumHarvesters < intMinNumHarvesters)
                     {
@@ -92,6 +101,14 @@ module.exports = {
                     {
                         objName = objSpawn.createCreep([WORK,CARRY,CARRY,MOVE], undefined, {role: 'mason', blnBuilding: false, blnGettingEnergy: true, blnMasoning: false, blnRepairing: false, blnTransferring: false});
                     }
+                    // spawn a new settler if we don't have enough
+                    else if (intNumSettlers < intMinNumSettlers)
+                    {
+                        console.log("BANANA");
+
+                        objName = objSpawn.createCreep([CLAIM,MOVE], undefined, {role: 'settler', blnBuilding: false, blnGettingEnergy: false, blnMasoning: false, blnRepairing: false, blnTransferring: false});
+
+                    }
                     // if we have all our minimums, and we have energy to spare, spawn a upgrader
                     else
                     {
@@ -119,7 +136,7 @@ module.exports = {
         {
             objRoom = Game.rooms[i];
 
-            objTowers = objRoom.find(FIND_MY_STRUCTURES, {
+            objTowers = objRoom.find(FIND_STRUCTURES, {
                  filter: (s) => s.structureType == STRUCTURE_TOWER
             });
 
