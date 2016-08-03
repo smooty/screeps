@@ -40,7 +40,7 @@ module.exports = {
         var intMinNumRepairers = 1;
         var intMinNumScoutHarvesters = 4;
         var intMinNumUpgraders = 4;
-        var intMinNumSettlers = 1;
+        var intMinNumSettlers = 0;
         var intRequiredEnergy = 300;
         var objName;
         var objSpawn;

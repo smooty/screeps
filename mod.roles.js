@@ -21,7 +21,7 @@ var blnEnableLogging_harvester = false;
 var blnEnableLogging_builder = false;
 var blnEnableLogging_mason = false;
 var blnEnableLogging_repairer = false;
-var blnEnableLogging_settler = true;
+var blnEnableLogging_settler = false;
 
 
 function _blnWallsToRepair(creep,intWallHealth)
@@ -354,6 +354,10 @@ function _harvester(creep)
     {
         if (creep.memory.role == 'scout_harvester')
         {
+
+            // Disabling this section temporarily -- until I can better manage my 2nd room -- for now just dump energy into 2nd controller
+            /*
+
             // if creep isn't in home room, move there first
             if (creep.room.name != strHomeRoom)
             {
@@ -371,6 +375,11 @@ function _harvester(creep)
                 }
                 return; // get out of this function
             }
+
+            */
+
+            _upgrader(creep);
+            return; // get out of this function
         }
 
         if (creep.memory.blnTransferring == true)
